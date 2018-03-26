@@ -5,11 +5,6 @@ import (
 	"time"
 )
 
-type TimeEntriesResponse struct {
-	PagedResponse
-	TimeEntries []*TimeEntry `json:"time_entries"`
-}
-
 type TimeEntry struct {
 	ID             int64        `json:"id"`
 	SpentDate      Date         `json:"spent_date"`
@@ -37,8 +32,11 @@ type TimeEntry struct {
 }
 
 func (a *API) GetTimeEntries(args Arguments) ([]*TimeEntry, error) {
+	var timeEntriesResponse struct {
+		PagedResponse
+		TimeEntries []*TimeEntry `json:"time_entries"`
+	}
 	entries := make([]*TimeEntry, 0)
-	timeEntriesResponse := TimeEntriesResponse{}
 	err := a.GetPaginated("/time_entries", args, &timeEntriesResponse, func() {
 		for _, te := range timeEntriesResponse.TimeEntries {
 			entries = append(entries, te)

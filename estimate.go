@@ -5,11 +5,6 @@ import (
 	"time"
 )
 
-type EstimatesResponse struct {
-	PagedResponse
-	Estimates []*Estimate `json:"estimates"`
-}
-
 type Estimate struct {
 	ID             int64               `json:"id"`
 	Subject        string              `json:"subject"`
@@ -55,8 +50,11 @@ func (a *API) GetEstimate(estimateID int64, args Arguments) (estimate *Estimate,
 }
 
 func (a *API) GetEstimates(args Arguments) (estimates []*Estimate, err error) {
+	var estimatesResponse struct {
+		PagedResponse
+		Estimates []*Estimate `json:"estimates"`
+	}
 	estimates = make([]*Estimate, 0)
-	estimatesResponse := EstimatesResponse{}
 	err = a.GetPaginated("/estimates", args, &estimatesResponse, func() {
 		for _, e := range estimatesResponse.Estimates {
 			estimates = append(estimates, e)

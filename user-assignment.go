@@ -5,11 +5,6 @@ import (
 	"time"
 )
 
-type UserAssignmentsResponse struct {
-	PagedResponse
-	UserAssignments []*UserAssignment `json:"user_assignments"`
-}
-
 type UserAssignment struct {
 	ID               int64     `json:"id,omitempty"`
 	UserID           int64     `json:"user_id"`
@@ -23,7 +18,10 @@ type UserAssignment struct {
 }
 
 func (a *API) GetUserAssignments(projectID int64, args Arguments) (userAssignments []*UserAssignment, err error) {
-	userAssignmentsResponse := UserAssignmentsResponse{}
+	var userAssignmentsResponse struct {
+		PagedResponse
+		UserAssignments []*UserAssignment `json:"user_assignments"`
+	}
 	path := fmt.Sprintf("/projects/%v/user_assignments", projectID)
 	err = a.Get(path, args, &userAssignmentsResponse)
 	return userAssignmentsResponse.UserAssignments, err

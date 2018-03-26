@@ -6,11 +6,6 @@ import (
 	"time"
 )
 
-type ContactsResponse struct {
-	PagedResponse
-	Contacts []*Contact `json:"contacts"`
-}
-
 type Contact struct {
 	ID          int64      `json:"id"`
 	Title       string     `json:"title"`
@@ -38,8 +33,11 @@ func (a *API) GetClientContacts(clientID int64, args Arguments) (contacts []*Con
 }
 
 func (a *API) GetContacts(args Arguments) (contacts []*Contact, err error) {
+	var contactsResponse struct {
+		PagedResponse
+		Contacts []*Contact `json:"contacts"`
+	}
 	contacts = make([]*Contact, 0)
-	contactsResponse := ContactsResponse{}
 	path := fmt.Sprintf("/contacts")
 	err = a.GetPaginated(path, args, &contactsResponse, func() {
 		for _, c := range contactsResponse.Contacts {

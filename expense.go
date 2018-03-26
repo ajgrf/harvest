@@ -5,11 +5,6 @@ import (
 	"time"
 )
 
-type ExpensesResponse struct {
-	PagedResponse
-	Expenses []*Expense `json:"expenses"`
-}
-
 type Expense struct {
 	ID                int64     `json:"id"`
 	Notes             string    `json:"notes"`
@@ -39,8 +34,11 @@ func (a *API) GetExpense(expenseID int64, args Arguments) (expense *Expense, err
 }
 
 func (a *API) GetExpenses(args Arguments) (expenses []*Expense, err error) {
+	var expensesResponse struct {
+		PagedResponse
+		Expenses []*Expense `json:"expenses"`
+	}
 	expenses = make([]*Expense, 0)
-	expensesResponse := ExpensesResponse{}
 	err = a.GetPaginated("/expenses", args, &expensesResponse, func() {
 		for _, e := range expensesResponse.Expenses {
 			expenses = append(expenses, e)

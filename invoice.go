@@ -5,11 +5,6 @@ import (
 	"time"
 )
 
-type InvoicesResponse struct {
-	PagedResponse
-	Invoices []*Invoice `json:"invoices"`
-}
-
 type Invoice struct {
 	ID                 int64       `json:"id"`
 	Client             *ClientStub `json:"client,omitempty"`
@@ -65,8 +60,11 @@ func (a *API) GetInvoice(invoiceID int64, args Arguments) (invoice *Invoice, err
 }
 
 func (a *API) GetInvoices(args Arguments) (invoices []*Invoice, err error) {
+	var invoicesResponse struct {
+		PagedResponse
+		Invoices []*Invoice `json:"invoices"`
+	}
 	invoices = make([]*Invoice, 0)
-	invoicesResponse := InvoicesResponse{}
 	err = a.GetPaginated("/invoices", args, &invoicesResponse, func() {
 		for _, i := range invoicesResponse.Invoices {
 			invoices = append(invoices, i)

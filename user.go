@@ -5,11 +5,6 @@ import (
 	"time"
 )
 
-type UsersResponse struct {
-	PagedResponse
-	Users []*User `json:"users"`
-}
-
 type UserStub struct {
 	ID   int64  `json:"id"`
 	Name string `json:"name"`
@@ -45,8 +40,11 @@ func (a *API) GetUser(userID int64, args Arguments) (user *User, err error) {
 }
 
 func (a *API) GetUsers(args Arguments) (users []*User, err error) {
+	var usersResponse struct {
+		PagedResponse
+		Users []*User `json:"users"`
+	}
 	users = make([]*User, 0)
-	usersResponse := UsersResponse{}
 	err = a.GetPaginated("/users", args, &usersResponse, func() {
 		for _, u := range usersResponse.Users {
 			users = append(users, u)

@@ -5,11 +5,6 @@ import (
 	"time"
 )
 
-type TasksResponse struct {
-	PagedResponse
-	Tasks []*Task `json:"tasks"`
-}
-
 type TaskStub struct {
 	ID   int64  `json:"id"`
 	Name string `json:"name"`
@@ -34,8 +29,11 @@ func (a *API) GetTask(taskID int64, args Arguments) (task *Task, err error) {
 }
 
 func (a *API) GetTasks(args Arguments) (tasks []*Task, err error) {
+	var tasksResponse struct {
+		PagedResponse
+		Tasks []*Task `json:"tasks"`
+	}
 	tasks = make([]*Task, 0)
-	tasksResponse := TasksResponse{}
 	err = a.GetPaginated("/tasks", args, &tasksResponse, func() {
 		for _, t := range tasksResponse.Tasks {
 			tasks = append(tasks, t)

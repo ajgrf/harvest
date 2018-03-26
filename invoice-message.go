@@ -5,11 +5,6 @@ import (
 	"time"
 )
 
-type InvoiceMessagesResponse struct {
-	PagedResponse
-	InvoiceMessages []*InvoiceMessage `json:"invoice_messages"`
-}
-
 type InvoiceMessage struct {
 	ID                int64     `json:"id"`
 	InvoiceID         int64     `json:"invoice_id"`
@@ -29,8 +24,11 @@ type InvoiceMessage struct {
 }
 
 func (a *API) GetInvoiceMessages(invoiceID int64, args Arguments) (invoiceMessages []*InvoiceMessage, err error) {
+	var invoiceMessagesResponse struct {
+		PagedResponse
+		InvoiceMessages []*InvoiceMessage `json:"invoice_messages"`
+	}
 	invoiceMessages = make([]*InvoiceMessage, 0)
-	invoiceMessagesResponse := InvoiceMessagesResponse{}
 	path := fmt.Sprintf("/invoices/%v/messages", invoiceID)
 	err = a.GetPaginated(path, args, &invoiceMessagesResponse, func() {
 		for _, im := range invoiceMessagesResponse.InvoiceMessages {

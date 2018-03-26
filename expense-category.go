@@ -5,11 +5,6 @@ import (
 	"time"
 )
 
-type ExpenseCategoriesResponse struct {
-	PagedResponse
-	ExpenseCategories []*ExpenseCategory `json:"expense_categories"`
-}
-
 type ExpenseCategory struct {
 	ID          int64     `json:"id"`
 	Name        string    `json:"name"`
@@ -28,8 +23,11 @@ func (a *API) GetExpenseCategory(expenseCategoryID int64, args Arguments) (expen
 }
 
 func (a *API) GetExpenseCategories(args Arguments) (expenseCategories []*ExpenseCategory, err error) {
+	var expenseCategoriesResponse struct {
+		PagedResponse
+		ExpenseCategories []*ExpenseCategory `json:"expense_categories"`
+	}
 	expenseCategories = make([]*ExpenseCategory, 0)
-	expenseCategoriesResponse := ExpenseCategoriesResponse{}
 	err = a.GetPaginated("/expense_categories", args, &expenseCategoriesResponse, func() {
 		for _, ec := range expenseCategoriesResponse.ExpenseCategories {
 			expenseCategories = append(expenseCategories, ec)
