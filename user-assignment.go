@@ -6,13 +6,8 @@ import (
 )
 
 type UserAssignmentsResponse struct {
+	PagedResponse
 	UserAssignments []*UserAssignment `json:"user_assignments"`
-	PerPage         int64             `json:"per_page"`
-	TotalPages      int64             `json:"total_pages"`
-	TotalEntries    int64             `json:"total_entries"`
-	NextPage        *int64            `json:"next_page"`
-	PreviousPage    *int64            `json:"previous_page"`
-	Page            int64             `json:"page"`
 }
 
 type UserAssignment struct {
