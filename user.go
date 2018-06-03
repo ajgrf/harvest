@@ -30,6 +30,7 @@ type User struct {
 	WeeklyCapacity               int64     `json:"weekly_capacity"`
 	IdentityAccountID            int64     `json:"identity_account_id"`
 	IdentityUserID               int64     `json:"identity_user_id"`
+	Roles                        []string  `json:"roles"`
 }
 
 func (a *API) GetUser(userID int64, args Arguments) (user *User, err error) {
