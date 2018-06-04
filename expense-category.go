@@ -5,6 +5,13 @@ import (
 	"time"
 )
 
+type ExpenseCategoryStub struct {
+	ID        int64   `json:"id"`
+	Name      string  `json:"name"`
+	UnitName  string  `json:"unit_name"`
+	UnitPrice float64 `json:"unit_price"`
+}
+
 type ExpenseCategory struct {
 	ID          int64     `json:"id"`
 	Name        string    `json:"name"`
